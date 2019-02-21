@@ -19,7 +19,7 @@ void readData(Employee a[], int recordCount);
 void Display(Employee a[],int recordCount);
 void findRichest(Employee a[], int recordCount);
 void Deposit(char CustName[20], Employee a[], int recordCount);
-//void newCopy(string fileName, Employee a[],int recordCount);
+void newCopy(string fileName, Employee a[],int recordCount);
 
 
 int main()
@@ -37,7 +37,7 @@ int main()
         empCount++;
     }
     cout << "There are "<< empCount << " employees in the text file"<<endl; 
-    Employee employee[empCount];
+    Employee* employee= new Employee[empCount];
    
 
     //Start calling functions below here
@@ -63,16 +63,12 @@ int main()
     */
     char CustName[20];
     cout << "Enter your full name to deposit money: ";
-    cin >> CustName;
+    cin.getline(CustName,sizeof(CustName));//fill in the char array until 20
     Deposit(CustName, employee,empCount);
 
     //output the updated version into data.txt
-    //ofstream outFile;
-    //outFile.open("data.txt");
-    //newCopy("data.txt",employee,empCount);
+    newCopy("data.txt",employee,empCount);
 
-    //outFile.close();
-    inFile.close();
     system("read -p 'Press Enter to continue...' var");
     return 0;
 }
@@ -120,7 +116,7 @@ void Display(Employee a[],int recordCount)
 void findRichest(Employee a[], int recordCount)
 {
     char richestPerson[20];
-    int max = 0;
+    float max = 0;
     for( int j = 0; j <recordCount; j++ )
     {
         if(a[j].Balance > max)
@@ -128,7 +124,6 @@ void findRichest(Employee a[], int recordCount)
             max = a[j].Balance;
             strcpy(richestPerson,a[j].Name);//this is not the same as sting 
             //*** ^^^ this is important 
-            
         }
     }
     cout << "\nThe richest person in the list is "<< richestPerson <<endl;
@@ -142,14 +137,8 @@ void Deposit(char CustName[], Employee a[], int recordCount)
     float depositAmount;
     for(int k = 0; k <recordCount; k++)
     {
-        //add debugging stuff here to find name*********
-        cout << a[k].Name <<endl;
-
-        //strcmp(CustName, a[k].Name)==0)
-        //int compNum = strcmp(CustName, a[k].Name);
-
         /*
-            PROBLEM HERE IT WONT WORK
+            PROBLEM HERE fixed on 2/21 at 12:10pm with a friend 
         */
         if(strcmp(CustName, a[k].Name)==0)//use this to compare cstrings
         {
@@ -172,12 +161,20 @@ void Deposit(char CustName[], Employee a[], int recordCount)
     {
         cout << "Personel does not exist in the list"<<endl;
     }
-
-
-
 }
+/*
+    This outputs back into the data.txt and deletes and rewrites into it
+*/
+void newCopy(string fileName,Employee a[],int recordCount)
+{
+    ofstream outFile;
+    outFile.open(fileName);
+    
+    for(int l=0;l<recordCount; l++)
+    {
+        outFile<< a[l].Name << "\t"<< a[l].Balance<<endl;
+    }
 
-//void newCopy("data.txt",Employee a[],int recordCount)
-//{
-
-//}
+    outFile.close();
+    cout << "Data.txt has been updated."<<endl;
+}
