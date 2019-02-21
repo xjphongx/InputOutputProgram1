@@ -9,17 +9,17 @@
 
 using namespace std;
 
-struct Employee{
+struct PERSON{
     char Name[20];
     float Balance;
 };
 
 //class declarations
-void readData(Employee a[], int recordCount);
-void Display(Employee a[],int recordCount);
-void findRichest(Employee a[], int recordCount);
-void Deposit(char CustName[20], Employee a[], int recordCount);
-void newCopy(string fileName, Employee a[],int recordCount);
+void readData(PERSON a[], int recordCount);
+void Display(PERSON a[],int recordCount);
+void findRichest(PERSON a[], int recordCount);
+void Deposit(char CustName[20], PERSON a[], int recordCount);
+void newCopy(string fileName, PERSON a[],int recordCount);
 
 
 int main()
@@ -37,7 +37,7 @@ int main()
         empCount++;
     }
     cout << "There are "<< empCount << " employees in the text file"<<endl; 
-    Employee* employee= new Employee[empCount];
+    PERSON* employee= new PERSON[empCount];
    
 
     //Start calling functions below here
@@ -76,7 +76,7 @@ int main()
     CLASS DEF
 */
 
-void readData(Employee a[], int recordCount)
+void readData(PERSON a[], int recordCount)
 {
      ifstream inFile;
      inFile.open("data.txt");
@@ -100,7 +100,7 @@ void readData(Employee a[], int recordCount)
     inFile.close();
 }
 
-void Display(Employee a[],int recordCount)
+void Display(PERSON a[],int recordCount)
 {
     cout <<"\t\tName\t\tBalance"<<endl;
     cout<<"---------------------------------------"<<endl;
@@ -113,7 +113,7 @@ void Display(Employee a[],int recordCount)
 /*
     The findRichest function will search and print out the person with the highest balance
 */
-void findRichest(Employee a[], int recordCount)
+void findRichest(PERSON a[], int recordCount)
 {
     char richestPerson[20];
     float max = 0;
@@ -131,7 +131,7 @@ void findRichest(Employee a[], int recordCount)
 /*
     The Deposit function searches for the CustName and will ask the amount to deposit and print it out
 */
-void Deposit(char CustName[], Employee a[], int recordCount)
+void Deposit(char CustName[], PERSON a[], int recordCount)
 {
     bool isMatch = false;
     float depositAmount;
@@ -165,7 +165,7 @@ void Deposit(char CustName[], Employee a[], int recordCount)
 /*
     This outputs back into the data.txt and deletes and rewrites into it
 */
-void newCopy(string fileName,Employee a[],int recordCount)
+void newCopy(string fileName,PERSON a[],int recordCount)
 {
     ofstream outFile;
     outFile.open(fileName);
