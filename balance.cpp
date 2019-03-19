@@ -5,6 +5,7 @@
 #include<fstream>//this is needed for input output files
 #include <string>
 #include<cstring>
+#include <iomanip>
 
 
 //tip use cstring to take the whole character array then each spot will have a char number 
@@ -19,10 +20,10 @@ struct PERSON{
 
 //class declarations
 PERSON * readData(int & N);
-void Display(PERSON a[],int N);
-void findRichest(PERSON a[], int N);
-void Deposit(char CustName[20], PERSON a[], int N);
-void newCopy(string fileName, PERSON a[],int N);
+void Display(PERSON *arr,int N);
+void findRichest(PERSON *arr, int N);
+void Deposit(PERSON *arr, int N, char custName[], float amount);
+void newCopy(string fileName, PERSON *arr,int N);
 
 
 int main()
@@ -45,41 +46,34 @@ int main()
    
 
     //Start calling functions below here
-    /*
-        This will read data from file data.txt
-    */
     P=readData(N);
 
-    /*
-        Will display the inputs from the file data.text in the iofile folder
-    */
     Display(P, N);
 
-    /*
-        This will search through the array and find the wealthest person
-    */
     findRichest(P, N);
     
-    /*
-        Deposit will ask for name and compare inside the function
-        if the name exist then it will run the function
-        else exit
-    */
+    //Ask user before function call
     char CustName[20];
-    cout << "Enter your full name to deposit money: ";
+    float amount;
+    cout << "\nEnter name: ";
     cin.getline(CustName,sizeof(CustName));//fill in the char array until 20
-    Deposit(CustName, P ,N);
+    cout << "Amount: ";
+    cin >> amount;
+    Deposit(P, N, CustName,amount);
 
     //output the updated version into data.txt
     newCopy("data.txt",P ,N);
 
+    delete P; //deleting 'new' memory
+
     system("read -p 'Press Enter to continue...' var");
     return 0;
 }
-/*
-    CLASS DEF
-*/
 
+
+/*
+    The readData function uses pointers referencing to read in from a file
+*/
 PERSON * readData(int & N)
 {
      ifstream inFile;
@@ -102,39 +96,41 @@ PERSON * readData(int & N)
     inFile.close();
     return arryPtr;
 }
-
-void Display(PERSON a[],int N)
+/*
+    The Display function displays the current data with pointer usage
+*/
+void Display(PERSON *arr,int N)
 {
     cout <<"\t\tName\t\tBalance"<<endl;
     cout<<"---------------------------------------"<<endl;
     for(int i=0;i<N;i++)
     {
-        cout<<"\t\t"<< a[i].Name<< " "<<a[i].Balance<<endl;
+        cout<<"\t\t"<< arr[i].Name<< " "<<fixed<< setprecision(2)<<arr[i].Balance<<endl;
     }
 
 }
 /*
     The findRichest function will search and print out the person with the highest balance
 */
-void findRichest(PERSON a[], int N)
+void findRichest(PERSON *arr, int N)
 {
     char richestPerson[20];
     float max = 0;
     for( int j = 0; j <N; j++ )
     {
-        if(a[j].Balance > max)
+        if(arr[j].Balance > max)
         {
-            max = a[j].Balance;
-            strcpy(richestPerson,a[j].Name);//this is not the same as sting 
+            max = arr[j].Balance;
+            strcpy(richestPerson,arr[j].Name);//this is not the same as sting 
             //*** ^^^ this is important 
         }
     }
-    cout << "\nThe richest person in the list is "<< richestPerson <<endl;
+    cout << "\nHighest balance: "<< richestPerson <<endl;
 }
 /*
     The Deposit function searches for the CustName and will ask the amount to deposit and print it out
 */
-void Deposit(char CustName[], PERSON a[], int N)
+void Deposit(PERSON *arr, int N, char CustName[], float amount)
 {
     bool isMatch = false;
     float depositAmount;
@@ -143,14 +139,12 @@ void Deposit(char CustName[], PERSON a[], int N)
         /*
             PROBLEM HERE fixed on 2/21 at 12:10pm with a friend 
         */
-        if(strcmp(CustName, a[k].Name)==0)//use this to compare cstrings
+        if(strcmp(CustName, arr[k].Name)==0)//use this to compare cstrings
         {
             isMatch = true; //sets the bool to true if there is a match
-            cout << a[k].Name << ". how much would you like to deposit? "<<endl;
-            cin >> depositAmount;
             //add into balance
-            a[k].Balance+=depositAmount;
-            cout << "Now your new balance is " << a[k].Balance<<endl;
+            arr[k].Balance+=amount;
+            cout << "New Balance " <<fixed<< setprecision(2)<< arr[k].Balance<<endl;
         }
         //this is statement is used to break out of the look if CustName is found
         if(isMatch)
@@ -162,22 +156,22 @@ void Deposit(char CustName[], PERSON a[], int N)
     //after the forloop search and still no match
     if(isMatch == false)
     {
-        cout << "Personel does not exist in the list"<<endl;
+        cout << "Record not found"<<endl;
     }
 }
 /*
-    This outputs back into the data.txt and deletes and rewrites into it
+    The newCopy function outputs back into the data.txt and deletes and rewrites into it
 */
-void newCopy(string fileName,PERSON a[],int N)
+void newCopy(string fileName,PERSON *arr,int N)
 {
     ofstream outFile;
     outFile.open(fileName);
     
     for(int l=0;l<N; l++)
     {
-        outFile<< a[l].Name << "\t"<< a[l].Balance<<endl;
+        outFile<< arr[l].Name << "\t"<< arr[l].Balance<<endl;
     }
 
     outFile.close();
-    cout << "Data.txt has been updated."<<endl;
+    cout << "\nFile Updated..."<<endl;
 }
