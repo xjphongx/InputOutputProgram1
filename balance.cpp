@@ -18,7 +18,7 @@ struct PERSON{
 };
 
 //class declarations
-void * readData(int & N);
+PERSON * readData(int & N);
 void Display(PERSON a[],int N);
 void findRichest(PERSON a[], int N);
 void Deposit(char CustName[20], PERSON a[], int N);
@@ -48,7 +48,7 @@ int main()
     /*
         This will read data from file data.txt
     */
-    readData(N);
+    P=readData(N);
 
     /*
         Will display the inputs from the file data.text in the iofile folder
@@ -80,28 +80,27 @@ int main()
     CLASS DEF
 */
 
-void * readData(int & N)
+PERSON * readData(int & N)
 {
      ifstream inFile;
      inFile.open("data.txt");
-    //this loop will read in everything into employee struct
+    PERSON *arryPtr= new PERSON[N];
     int index = 0;
     while(!inFile.eof())
     {
-        char cName[20];
+        //Updated with pointer usages 
         string str1, str2;
-        float pay;
         inFile >> str1;
-        inFile >> str2; //these ignore white space?
-        inFile >> pay;
-        string name = str1 + " " + str2; //concatinate string
-        //convert to cString now 
-        strcpy(a[index].Name, name.c_str()); //this will convert into cString 
-        a[index].Balance = pay;
+        inFile >> str2; 
+        inFile >> arryPtr[index].Balance;
+        string name = str1 + " " + str2;
+        strcpy(arryPtr[index].Name,name.c_str());
         inFile.ignore();
-        index++;//will move onto the next spot
+        index++;
+
     }
     inFile.close();
+    return arryPtr;
 }
 
 void Display(PERSON a[],int N)
