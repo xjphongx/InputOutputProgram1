@@ -8,6 +8,8 @@
 #include <iomanip>
 
 
+
+
 //tip use cstring to take the whole character array then each spot will have a char number 
 
 
@@ -24,7 +26,7 @@ void Display(PERSON *arr,int N);
 void findRichest(PERSON *arr, int N);
 void Deposit(PERSON *arr, int N, char custName[], float amount);
 void newCopy(string fileName, PERSON *arr,int N);
-
+void printMenu();
 
 int main()
 {
@@ -43,28 +45,60 @@ int main()
     cout << "There are "<< N << " employees in the text file"<<endl; 
     PERSON* P; // P is a pointer to object PERSON
     P= new PERSON[N];   //new pointer concept
-   
-
-    //Start calling functions below here
     P=readData(N);
 
-    Display(P, N);
-
-    findRichest(P, N);
-    
-    //Ask user before function call
+    //menu stuff here
     char CustName[20];
+    string name;
     float amount;
-    cout << "\nEnter name: ";
-    cin.getline(CustName,sizeof(CustName));//fill in the char array until 20
-    cout << "Amount: ";
-    cin >> amount;
-    Deposit(P, N, CustName,amount);
+    int choice;
+    do
+    {
+        printMenu();
+        cin >> choice;
+        switch(choice)
+        {
+            case 1:
+                // Act on display
+                Display(P, N);
+                break;
 
-    //output the updated version into data.txt
-    newCopy("data.txt",P ,N);
+            case 2:
 
-    delete P; //deleting 'new' memory
+                // Act on deposit
+                //Ask user before function call
+                cin.ignore();
+                cout << "\nEnter name: ";
+                getline(cin,name);
+                strcpy(CustName,name.c_str());
+                cout << "Amount: ";
+                cin >> amount;
+                Deposit(P, N, CustName,amount);
+                break;
+
+            case 3:
+                // Act highest balance
+                findRichest(P, N);
+                break;
+
+            case 4:
+                // Act on update records
+                newCopy("data.txt",P ,N);
+                break;
+
+            case 5:
+                // Must call update records here before exiting the program
+                Display(P, N);
+                break;
+
+            default:
+                cout << "Invalid entry" << endl;
+                break;
+        }
+        cout << endl;
+   } while(choice != 5);
+
+    delete[] P; //deleting 'new' memory
 
     system("read -p 'Press Enter to continue...' var");
     return 0;
@@ -175,3 +209,12 @@ void newCopy(string fileName,PERSON *arr,int N)
     outFile.close();
     cout << "\nFile Updated..."<<endl;
 }
+void printMenu() {
+    cout << "Please enter a choice:" << endl;
+    cout << "1. Display records"<< endl;
+    cout << "2. Deposit funds"<< endl;
+    cout << "3. Find Highest Balance" << endl;
+    cout << "4. Update records" << endl;
+    cout << "5. Exit the program" << endl;
+}
+
